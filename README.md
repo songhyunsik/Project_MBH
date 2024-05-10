@@ -13,3 +13,5 @@
     - WS2812b strips contain RGB LEDs
     - The 5V LEDs in the WS2812b strips work well with the Arduino Uno we're using for our projects
     - pins: Power5V, Data In Din, and Ground 0V
+        - Red : 5V / Green : Data Out / White : GND
+    
