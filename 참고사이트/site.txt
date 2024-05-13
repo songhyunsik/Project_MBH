@@ -1,0 +1,5 @@
+대한민국 기상청 대표 블로그: 생기발랄 : https://m.blog.naver.com/kma_131/223006786447
+공공데이터포털 : https://www.data.go.kr/index.do
+기상청 API허브 : https://apihub.kma.go.kr/
+현재시간추출(chat gpt) : https://chatgpt.com/c/f2fc2710-e3e4-4c31-93ad-5ac22ee91705
+텍스트 단어추출(chat gpt) : https://chatgpt.com/c/5b10d7ad-d4aa-4a6b-9436-84256dd64a64
