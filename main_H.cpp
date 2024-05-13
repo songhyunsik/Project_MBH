@@ -4,7 +4,7 @@
 #endif
 
 #define PIN 6
-#define SW 2
+#define SW 2    // 버튼 연결 핀
 #define BRIGHTNESS_PIN A0 // 가변 저항 연결 핀
 int cnt = 0;
 // Parameter 1 = number of pixels in strip
