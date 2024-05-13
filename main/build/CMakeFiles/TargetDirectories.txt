@@ -1,3 +1,0 @@
-/home/hrd/Desktop/Project_MBH/main/build/CMakeFiles/main.dir
-/home/hrd/Desktop/Project_MBH/main/build/CMakeFiles/edit_cache.dir
-/home/hrd/Desktop/Project_MBH/main/build/CMakeFiles/rebuild_cache.dir

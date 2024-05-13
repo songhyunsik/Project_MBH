@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/weatherMoon.dir/weatherMoon.cpp.o -o weatherMoon  -lcurl 
