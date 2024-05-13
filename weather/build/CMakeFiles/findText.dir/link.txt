@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/findText.dir/findText.cpp.o -o findText  -lcurl 

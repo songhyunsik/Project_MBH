@@ -1,3 +1,4 @@
+/home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles/findText.dir
 /home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles/weather.dir
 /home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles/edit_cache.dir
 /home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles/rebuild_cache.dir

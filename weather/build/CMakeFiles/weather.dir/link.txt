@@ -1,1 +1,1 @@
-/usr/bin/cc -rdynamic CMakeFiles/weather.dir/weather.c.o -o weather  -lcurl 
+/usr/bin/c++ -rdynamic CMakeFiles/weather.dir/weather.cpp.o -o weather  -lcurl 

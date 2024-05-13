@@ -63,6 +63,7 @@ CMAKE_BINARY_DIR = /home/hrd/Desktop/Project_MBH/weather/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/findText.dir/all
 all: CMakeFiles/weather.dir/all
 .PHONY : all
 
@@ -71,8 +72,35 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/findText.dir/clean
 clean: CMakeFiles/weather.dir/clean
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/findText.dir
+
+# All Build rule for target.
+CMakeFiles/findText.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/findText.dir/build.make CMakeFiles/findText.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/findText.dir/build.make CMakeFiles/findText.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles --progress-num=1,2 "Built target findText"
+.PHONY : CMakeFiles/findText.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/findText.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/findText.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles 0
+.PHONY : CMakeFiles/findText.dir/rule
+
+# Convenience name for target.
+findText: CMakeFiles/findText.dir/rule
+.PHONY : findText
+
+# clean rule for target.
+CMakeFiles/findText.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/findText.dir/build.make CMakeFiles/findText.dir/clean
+.PHONY : CMakeFiles/findText.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/weather.dir
@@ -81,7 +109,7 @@ clean: CMakeFiles/weather.dir/clean
 CMakeFiles/weather.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles --progress-num=1,2 "Built target weather"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hrd/Desktop/Project_MBH/weather/build/CMakeFiles --progress-num=3,4 "Built target weather"
 .PHONY : CMakeFiles/weather.dir/all
 
 # Build rule for subdir invocation for target.

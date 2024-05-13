@@ -117,6 +117,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named findText
+
+# Build rule for target.
+findText: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 findText
+.PHONY : findText
+
+# fast build rule for target.
+findText/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/findText.dir/build.make CMakeFiles/findText.dir/build
+.PHONY : findText/fast
+
+#=============================================================================
 # Target rules for targets named weather
 
 # Build rule for target.
@@ -129,29 +142,53 @@ weather/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/build
 .PHONY : weather/fast
 
-weather.o: weather.c.o
+findText.o: findText.cpp.o
+.PHONY : findText.o
+
+# target to build an object file
+findText.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/findText.dir/build.make CMakeFiles/findText.dir/findText.cpp.o
+.PHONY : findText.cpp.o
+
+findText.i: findText.cpp.i
+.PHONY : findText.i
+
+# target to preprocess a source file
+findText.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/findText.dir/build.make CMakeFiles/findText.dir/findText.cpp.i
+.PHONY : findText.cpp.i
+
+findText.s: findText.cpp.s
+.PHONY : findText.s
+
+# target to generate assembly for a file
+findText.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/findText.dir/build.make CMakeFiles/findText.dir/findText.cpp.s
+.PHONY : findText.cpp.s
+
+weather.o: weather.cpp.o
 .PHONY : weather.o
 
 # target to build an object file
-weather.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/weather.c.o
-.PHONY : weather.c.o
+weather.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/weather.cpp.o
+.PHONY : weather.cpp.o
 
-weather.i: weather.c.i
+weather.i: weather.cpp.i
 .PHONY : weather.i
 
 # target to preprocess a source file
-weather.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/weather.c.i
-.PHONY : weather.c.i
+weather.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/weather.cpp.i
+.PHONY : weather.cpp.i
 
-weather.s: weather.c.s
+weather.s: weather.cpp.s
 .PHONY : weather.s
 
 # target to generate assembly for a file
-weather.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/weather.c.s
-.PHONY : weather.c.s
+weather.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/weather.cpp.s
+.PHONY : weather.cpp.s
 
 # Help Target
 help:
@@ -161,7 +198,11 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... findText"
 	@echo "... weather"
+	@echo "... findText.o"
+	@echo "... findText.i"
+	@echo "... findText.s"
 	@echo "... weather.o"
 	@echo "... weather.i"
 	@echo "... weather.s"

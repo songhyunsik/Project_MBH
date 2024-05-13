@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(basicOp)
 find_package(CURL REQUIRED)
-file(GLOB SOURCES "*.c")
+file(GLOB SOURCES "*.cpp")
 
 foreach(SOURCE ${SOURCES})
     get_filename_component(EXE_NAME ${SOURCE} NAME_WE)

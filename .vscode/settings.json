@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "curl.h": "c"
+        "curl.h": "c",
+        "random": "cpp",
+        "ostream": "cpp"
     }
 }
