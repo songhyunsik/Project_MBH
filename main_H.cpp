@@ -1,63 +1,84 @@
 #include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+#include <avr/power.h>
+#endif
 
 #define PIN 6
 #define SW 2
 #define BRIGHTNESS_PIN A0 // 가변 저항 연결 핀
-#define NUM_PIXELS 60
-
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, PIN, NEO_GRB + NEO_KHZ800);
-
 int cnt = 0;
+// Parameter 1 = number of pixels in strip
+// Parameter 2 = Arduino pin number (most are valid)
+// Parameter 3 = pixel type flags, add together as needed:
+//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
+//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
+//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
+//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+//   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, PIN, NEO_GRB + NEO_KHZ800);
 
-void colorWipe(uint32_t c, uint8_t wait);
-void rainbow(uint8_t wait);
-void rainbowCycle(uint8_t wait);
-void theaterChase(uint32_t c, uint8_t wait);
-void theaterChaseRainbow(uint8_t wait);
-uint32_t Wheel(byte WheelPos);
+// IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
+// pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
+// and minimize distance between Arduino and first pixel.  Avoid connecting
+// on a live circuit...if you must, connect GND first.
 
 void setup() {
-  pinMode(SW, INPUT_PULLUP);
+  // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
+  #if defined (__AVR_ATtiny85__)
+  if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
+  #endif
+  // End of trinket special code
+
+  pinMode(SW, INPUT);
 
   strip.begin();
   strip.setBrightness(50);
-  strip.show(); // 모든 픽셀을 꺼진 상태로 초기화
-}
-
-void loop() {
-  if(digitalRead(SW) == LOW) {
-    cnt++;
-    delay(100); // 버튼 튀는 현상 방지를 위한 딜레이
-    if(cnt > 5) cnt = 1; // 5번까지 반복 후 초기화
-
-    switch(cnt) {
-      case 1:
-        colorWipe(strip.Color(255, 0, 0), 50); // Red
-        colorWipe(strip.Color(0, 255, 0), 50); // Green
-        colorWipe(strip.Color(0, 0, 255), 50); // Blue
-        colorWipe(strip.Color(255, 255, 255), 50); // White
-        break;
-      case 2:
-        theaterChase(strip.Color(127, 127, 127), 50); // White
-        theaterChase(strip.Color(127, 0, 0), 50); // Red
-        theaterChase(strip.Color(0, 0, 127), 50); // Blue
-        break;
-      case 3:
-        rainbow(8);
-        break;
-      case 4:
-        rainbowCycle(20);
-        break;
-      case 5:
-        theaterChaseRainbow(10);
-        break;
-      default:
-        break;
-    }
+  strip.show(); // Initialize all pixels to 'off'
+  Serial.begin(115200);
+  if(SW) {
+      cnt++;
   }
 }
 
-// 픽셀을 순서대로 색상으로 채웁니다.
+void loop() {
+
+  int brightnessValue = map(analogRead(BRIGHTNESS_PIN), 0, 1023, 0, 255); // 아날로그 입력 값을 밝기로 변환합니다.
+  strip.setBrightness(brightnessValue); // NeoPixel의 밝기를 설정합니다.
+  Serial.println(cnt);
+  Serial.println(brightnessValue);
+
+  if(SW) {
+    if(cnt == 1) {
+      colorWipe(strip.Color(255, 0, 0), 50); // Red
+      colorWipe(strip.Color(0, 255, 0), 50); // Green
+      colorWipe(strip.Color(0, 0, 255), 50); // Blue
+      colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
+    }
+
+    else if(cnt == 2) {
+      theaterChase(strip.Color(127, 127, 127), 50); // White
+      theaterChase(strip.Color(127, 0, 0), 50); // Red
+      theaterChase(strip.Color(0, 0, 127), 50); // Blue
+    }
+
+    else if(cnt == 3) {
+      rainbow(8);
+    }
+
+    else if(cnt == 4) {
+      rainbowCycle(20);
+    }
+
+    else if(cnt == 5) {
+      theaterChaseRainbow(10);
+    }
+  }
+  
+
+
+}
+
+// Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
     strip.setPixelColor(i, c);
@@ -66,7 +87,6 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
-// 무지개 색상 효과
 void rainbow(uint8_t wait) {
   uint16_t i, j;
 
@@ -79,11 +99,11 @@ void rainbow(uint8_t wait) {
   }
 }
 
-// 무지개 색상이 동일하게 분포되도록 설정
+// Slightly different, this makes the rainbow equally distributed throughout
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
 
-  for(j=0; j<256*5; j++) { // 5번의 무지개 효과 사이클
+  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
     for(i=0; i< strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
@@ -92,43 +112,44 @@ void rainbowCycle(uint8_t wait) {
   }
 }
 
-// 극장 스타일의 픽셀 이동 효과
+//Theatre-style crawling lights.
 void theaterChase(uint32_t c, uint8_t wait) {
-  for (int j=0; j<10; j++) { // 10번의 이동 효과
+  for (int j=0; j<10; j++) {  //do 10 cycles of chasing
     for (int q=0; q < 3; q++) {
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, c); // 매 3번째 픽셀 켜기
+        strip.setPixelColor(i+q, c);    //turn every third pixel on
       }
       strip.show();
 
       delay(wait);
 
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, 0); // 매 3번째 픽셀 끄기
+        strip.setPixelColor(i+q, 0);        //turn every third pixel off
       }
     }
   }
 }
 
-// 극장 스타일의 무지개 색상 효과
+//Theatre-style crawling lights with rainbow effect
 void theaterChaseRainbow(uint8_t wait) {
-  for (int j=0; j < 256; j++) { // 모든 256가지 색상의 무지개 효과 사이클
+  for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
     for (int q=0; q < 3; q++) {
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, Wheel( (i+j) % 255)); // 매 3번째 픽셀에 무지개 색상 적용
+        strip.setPixelColor(i+q, Wheel( (i+j) % 255));    //turn every third pixel on
       }
       strip.show();
 
       delay(wait);
 
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, 0); // 매 3번째 픽셀 끄기
+        strip.setPixelColor(i+q, 0);        //turn every third pixel off
       }
     }
   }
 }
 
-// 0부터 255까지의 값에 따라 색상 값을 반환
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
 uint32_t Wheel(byte WheelPos) {
   WheelPos = 255 - WheelPos;
   if(WheelPos < 85) {
