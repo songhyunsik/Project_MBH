@@ -1,62 +1,63 @@
 #include <Adafruit_NeoPixel.h>
-#include <wiringPi.h>
 
 #define PIN 6
 #define SW 2
-#define BRIGHTNESS_PIN 0 // 가변 저항 연결 핀 (아날로그 핀 사용 불가능)
+#define BRIGHTNESS_PIN A0 // 가변 저항 연결 핀
+#define NUM_PIXELS 60
+
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 int cnt = 0;
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, PIN, NEO_GRB + NEO_KHZ800);
+void colorWipe(uint32_t c, uint8_t wait);
+void rainbow(uint8_t wait);
+void rainbowCycle(uint8_t wait);
+void theaterChase(uint32_t c, uint8_t wait);
+void theaterChaseRainbow(uint8_t wait);
+uint32_t Wheel(byte WheelPos);
 
 void setup() {
-  wiringPiSetup(); // wiringPi 라이브러리를 초기화합니다.
-  pinMode(SW, INPUT);
+  pinMode(SW, INPUT_PULLUP);
 
   strip.begin();
   strip.setBrightness(50);
-  strip.show(); // Initialize all pixels to 'off'
-  if (wiringPiISR(SW, INT_EDGE_FALLING, &incrementCounter) < 0) { // 스위치 인터럽트를 설정합니다.
-    printf("Unable to setup ISR\n");
-    return 1;
-  }
+  strip.show(); // 모든 픽셀을 꺼진 상태로 초기화
 }
 
 void loop() {
-  int brightnessValue = map(analogRead(BRIGHTNESS_PIN), 0, 1023, 0, 255); // 아날로그 입력 값을 밝기로 변환합니다.
-  strip.setBrightness(brightnessValue); // NeoPixel의 밝기를 설정합니다.
+  if(digitalRead(SW) == LOW) {
+    cnt++;
+    delay(100); // 버튼 튀는 현상 방지를 위한 딜레이
+    if(cnt > 5) cnt = 1; // 5번까지 반복 후 초기화
 
-  if(cnt == 1) {
-    colorWipe(strip.Color(255, 0, 0), 50); // Red
-    colorWipe(strip.Color(0, 255, 0), 50); // Green
-    colorWipe(strip.Color(0, 0, 255), 50); // Blue
-    colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
-  }
-
-  else if(cnt == 2) {
-    theaterChase(strip.Color(127, 127, 127), 50); // White
-    theaterChase(strip.Color(127, 0, 0), 50); // Red
-    theaterChase(strip.Color(0, 0, 127), 50); // Blue
-  }
-
-  else if(cnt == 3) {
-    rainbow(8);
-  }
-
-  else if(cnt == 4) {
-    rainbowCycle(20);
-  }
-
-  else if(cnt == 5) {
-    theaterChaseRainbow(10);
+    switch(cnt) {
+      case 1:
+        colorWipe(strip.Color(255, 0, 0), 50); // Red
+        colorWipe(strip.Color(0, 255, 0), 50); // Green
+        colorWipe(strip.Color(0, 0, 255), 50); // Blue
+        colorWipe(strip.Color(255, 255, 255), 50); // White
+        break;
+      case 2:
+        theaterChase(strip.Color(127, 127, 127), 50); // White
+        theaterChase(strip.Color(127, 0, 0), 50); // Red
+        theaterChase(strip.Color(0, 0, 127), 50); // Blue
+        break;
+      case 3:
+        rainbow(8);
+        break;
+      case 4:
+        rainbowCycle(20);
+        break;
+      case 5:
+        theaterChaseRainbow(10);
+        break;
+      default:
+        break;
+    }
   }
 }
 
-void incrementCounter() {
-  cnt++;
-}
-
-// Fill the dots one after the other with a color
+// 픽셀을 순서대로 색상으로 채웁니다.
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
     strip.setPixelColor(i, c);
@@ -65,6 +66,7 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
+// 무지개 색상 효과
 void rainbow(uint8_t wait) {
   uint16_t i, j;
 
@@ -77,11 +79,11 @@ void rainbow(uint8_t wait) {
   }
 }
 
-// Slightly different, this makes the rainbow equally distributed throughout
+// 무지개 색상이 동일하게 분포되도록 설정
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
 
-  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+  for(j=0; j<256*5; j++) { // 5번의 무지개 효과 사이클
     for(i=0; i< strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
@@ -90,33 +92,52 @@ void rainbowCycle(uint8_t wait) {
   }
 }
 
-//Theatre-style crawling lights.
+// 극장 스타일의 픽셀 이동 효과
 void theaterChase(uint32_t c, uint8_t wait) {
-  for (int j=0; j<10; j++) {  //do 10 cycles of chasing
+  for (int j=0; j<10; j++) { // 10번의 이동 효과
     for (int q=0; q < 3; q++) {
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, c);    //turn every third pixel on
+        strip.setPixelColor(i+q, c); // 매 3번째 픽셀 켜기
       }
       strip.show();
 
       delay(wait);
 
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, 0);        //turn every third pixel off
+        strip.setPixelColor(i+q, 0); // 매 3번째 픽셀 끄기
       }
     }
   }
 }
 
-//Theatre-style crawling lights with rainbow effect
+// 극장 스타일의 무지개 색상 효과
 void theaterChaseRainbow(uint8_t wait) {
-  for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
+  for (int j=0; j < 256; j++) { // 모든 256가지 색상의 무지개 효과 사이클
     for (int q=0; q < 3; q++) {
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, Wheel( (i+j) % 255));    //turn every third pixel on
+        strip.setPixelColor(i+q, Wheel( (i+j) % 255)); // 매 3번째 픽셀에 무지개 색상 적용
       }
       strip.show();
 
       delay(wait);
 
-      for (uint16_t i=0; i < strip.numPixels(); i
+      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
+        strip.setPixelColor(i+q, 0); // 매 3번째 픽셀 끄기
+      }
+    }
+  }
+}
+
+// 0부터 255까지의 값에 따라 색상 값을 반환
+uint32_t Wheel(byte WheelPos) {
+  WheelPos = 255 - WheelPos;
+  if(WheelPos < 85) {
+    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  }
+  if(WheelPos < 170) {
+    WheelPos -= 85;
+    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  }
+  WheelPos -= 170;
+  return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+}
