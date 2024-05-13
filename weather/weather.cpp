@@ -6,7 +6,7 @@
 int main() {
     CURL* curl = curl_easy_init();
     if (curl) {
-        FILE* fp = fopen("output.txt", "wb"); // 파일 열기
+        FILE* fp = fopen("output.txt", "wb");
         //세종특별자치시 code : 239
         const char* url = "https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=239&help=0&authKey=93hdUM5UQ6O4XVDOVOOjwA" ; // URL 문자열 변수 설정
         curl_easy_setopt(curl, CURLOPT_URL, url); // URL 설정
@@ -15,7 +15,6 @@ int main() {
         if (res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res)); // 오류 처리
         }
-        printf("res: %d\n", res);
         curl_easy_cleanup(curl); // CURL 정리
         fclose(fp); // 파일 닫기
     }
