@@ -35,7 +35,7 @@ std::string convertEUC_KRtoUTF8(std::string strEUCKR) {
 
 // 5번째 줄 12번, 14번, 16번에 있는 단어 추출
 int main() {
-   std::ifstream inputFile("output1.txt"); // 파일 경로를 수정하세요
+   std::ifstream inputFile("/home/hrd/Desktop/Project_MBH/weather/build/output1.txt"); // 파일 경로를 수정하세요
    std::string line;
    std::string temperature;   // 추출한 단어를 저장할 변수
    std::string humidity;      // 추출한 단어를 저장할 변수
