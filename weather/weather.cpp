@@ -13,7 +13,7 @@ int main() {
     if (curl) {
         FILE* fp = fopen("output1.txt", "wb");
         //세종특별자치시 code : 239
-        const char* url = "https://apihub.kma.go.kr/api/typ01/url/fct_afs_dl.php?reg=&tmfc=0&stn=239&disp=0&help=1&authKey=93hdUM5UQ6O4XVDOVOOjwA" ; // URL 문자열 변수 설정
+        const char* url = "https://apihub.kma.go.kr/api/typ01/url/fct_afs_dl.php?reg=&tmfc=0&reg=11C20000&disp=0&help=1&authKey=93hdUM5UQ6O4XVDOVOOjwA" ; // URL 문자열 변수 설정
         curl_easy_setopt(curl, CURLOPT_URL, url); // URL 설정
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp); // 데이터 쓰기 설정
         CURLcode res = curl_easy_perform(curl); // 데이터 다운로드 수행
