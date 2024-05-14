@@ -6,7 +6,8 @@
 #define PIN 6
 #define SW 2    // 버튼 연결 핀
 #define BRIGHTNESS_PIN A0 // 가변 저항 연결 핀
-int cnt = 0;
+volatile int cnt = 0; // 인터럽트에 의해 변경되므로 volatile 선언
+
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
 // Parameter 3 = pixel type flags, add together as needed:
@@ -29,53 +30,63 @@ void setup() {
   #endif
   // End of trinket special code
 
-  pinMode(SW, INPUT);
+  pinMode(SW, INPUT_PULLUP);  // 버튼 핀을 풀업 입력 모드로 설정
 
   strip.begin();
   strip.setBrightness(50);
   strip.show(); // Initialize all pixels to 'off'
   Serial.begin(115200);
-  if(SW) {
-      cnt++;
-  }
+
+  // 인터럽트 설정 (버튼 핀에 FALLING 모드 설정)
+  attachInterrupt(digitalPinToInterrupt(SW), buttonISR, FALLING);
 }
 
 void loop() {
-
   int brightnessValue = map(analogRead(BRIGHTNESS_PIN), 0, 1023, 0, 255); // 아날로그 입력 값을 밝기로 변환합니다.
   strip.setBrightness(brightnessValue); // NeoPixel의 밝기를 설정합니다.
+  Serial.print("cnt: ");
   Serial.println(cnt);
+  Serial.print("Brightness: ");
   Serial.println(brightnessValue);
 
-  if(SW) {
-    if(cnt == 1) {
+  // cnt 값에 따라 LED 패턴 실행
+  switch (cnt) {
+    case 1:
       colorWipe(strip.Color(255, 0, 0), 50); // Red
       colorWipe(strip.Color(0, 255, 0), 50); // Green
       colorWipe(strip.Color(0, 0, 255), 50); // Blue
       colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
-    }
-
-    else if(cnt == 2) {
+      break;
+    case 2:
       theaterChase(strip.Color(127, 127, 127), 50); // White
       theaterChase(strip.Color(127, 0, 0), 50); // Red
       theaterChase(strip.Color(0, 0, 127), 50); // Blue
-    }
-
-    else if(cnt == 3) {
+      break;
+    case 3:
       rainbow(8);
-    }
-
-    else if(cnt == 4) {
-      rainbowCycle(20);
-    }
-
-    else if(cnt == 5) {
-      theaterChaseRainbow(10);
-    }
+      break;
+    case 4:
+      rainbowCycle(8);
+      break;
+    case 5:
+      theaterChaseRainbow(8);
+      break;
+    default:
+      break;
   }
-  
 
+  // cnt 값을 제한
+  if (cnt > 5) {
+    cnt = 0;
+  }
 
+  // 작은 지연 추가하여 CPU 과부하 방지
+  delay(10);
+}
+
+// 인터럽트 서비스 루틴 (ISR)
+void buttonISR() {
+  cnt++;
 }
 
 // Fill the dots one after the other with a color
@@ -84,6 +95,9 @@ void colorWipe(uint32_t c, uint8_t wait) {
     strip.setPixelColor(i, c);
     strip.show();
     delay(wait);
+    if(cnt != 1) {
+      return;
+    }
   }
 }
 
@@ -96,6 +110,9 @@ void rainbow(uint8_t wait) {
     }
     strip.show();
     delay(wait);
+    if(cnt != 3) {
+      return;
+    }
   }
 }
 
@@ -109,6 +126,9 @@ void rainbowCycle(uint8_t wait) {
     }
     strip.show();
     delay(wait);
+    if(cnt != 4) {
+      return;
+    }
   }
 }
 
@@ -127,6 +147,9 @@ void theaterChase(uint32_t c, uint8_t wait) {
         strip.setPixelColor(i+q, 0);        //turn every third pixel off
       }
     }
+    if(cnt != 2) {
+      return;
+    }
   }
 }
 
@@ -144,6 +167,9 @@ void theaterChaseRainbow(uint8_t wait) {
       for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
         strip.setPixelColor(i+q, 0);        //turn every third pixel off
       }
+    }
+    if(cnt != 5) {
+      return;
     }
   }
 }
