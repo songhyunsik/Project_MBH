@@ -1,38 +1,95 @@
-// libcurl을 사용하여 API를 호출하고, 결과를 읽고 출력합니다.
-#include <curl/curl.h>
+#include <fstream>
+#include <iconv.h>
 #include <iostream>
+#include <sstream>
 #include <string>
-#include <cstring>
 
+std::string convertEUC_KRtoUTF8(std::string strEUCKR) {
+   iconv_t conv = iconv_open("UTF-8", "EUC-KR");
+   if (conv == (iconv_t)-1) {
+      perror("iconv_open");
+      return "";
+   }
+
+   size_t inbytesleft, outbytesleft;
+   inbytesleft = strEUCKR.size();
+   outbytesleft = inbytesleft * 3;
+
+   char *inbuf = &strEUCKR[0];
+   char *outbuf = new char[outbytesleft];
+   char *outbufstart = outbuf;
+
+   if (iconv(conv, &inbuf, &inbytesleft, &outbuf, &outbytesleft) ==
+      (size_t)-1) {
+      perror("iconv");
+      return "";
+   }
+
+   std::string strUTF8(outbufstart, outbuf - outbufstart);
+   delete[] outbufstart;
+
+   iconv_close(conv);
+
+   return strUTF8;
+}
+
+// 5번째 줄 12번, 14번, 16번에 있는 단어 추출
 int main() {
-  // libcurl 객체를 초기화합니다.
-  CURL* curl;
-  CURLcode res;
-  std::string readBuffer;
+   std::ifstream inputFile("output1.txt"); // 파일 경로를 수정하세요
+   std::string line;
+   std::string temperature;   // 추출한 단어를 저장할 변수
+   std::string humidity;      // 추출한 단어를 저장할 변수
+   std::string precipitation; // 추출한 단어를 저장할 변수
 
-  curl = curl_easy_init();
-  if (curl) {
-    // 요청 URL을 설정합니다.
-    curl_easy_setopt(curl, CURLOPT_URL, "https://apihub.kma.go.kr/api/typ01/url/fct_afs_dl.php?reg=&tmfc=0&stn=239&disp=0&help=1&authKey=93hdUM5UQ6O4XVDOVOOjwA" );
-    // // 리다이렉션을 따르도록 설정합니다.
-    // curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    // // 응답을 어떻게 처리할지 설정하는 콜백 함수를 등록합니다.
-    // curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, [](char* ptr, size_t size, size_t nmemb, std::string* data) -> size_t {
-    //     // 응답의 각 조각(chunk)을 읽어들여 버퍼에 추가합니다.
-    //     data->append(ptr, size * nmemb);
-    //     return size * nmemb;
-    // });
-    // // WRITEFUNCTION 콜백 함수에서 사용할 데이터를 설정합니다. 여기서는 readBuffer를 사용합니다.
-    // curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+   // 파일이 열렸는지 확인
+   if (!inputFile.is_open()) {
+      std::cerr << "파일을 열 수 없습니다." << std::endl;
+      return 1;
+   }
 
-    // 요청을 실행하고 결과를 저장합니다.
-    res = curl_easy_perform(curl);
+   // 파일을 한 줄씩 읽어서 특정 줄과 특정 단어를 추출
+   int currentLine = 0;
+   while (std::getline(inputFile, line)) {
+      currentLine++;
 
-    // libcurl 객체를 정리합니다.
-    curl_easy_cleanup(curl);
+      // 5번째 줄인 경우
+      if (currentLine == 12) {
+         std::istringstream iss(line);
+         std::string word;
+         int wordCount = 0;
 
-    // 응답을 출력합니다.
-    std::cout << readBuffer << std::endl;
-  }
-  return 0;
+         // 공백을 구분자로 하여 단어 추출
+         while (iss >> word) {
+            wordCount++;
+            // 12번째 단어
+            // if (wordCount == 12) {
+            //     temperature = word;
+            //     continue;
+            // }
+            // // 14번째 단어
+            // if (wordCount == 14) {
+            //     humidity = word;
+            //     continue;
+            // }
+            // 16번째 단어
+            if (wordCount == 5) {
+               precipitation = word;
+               break;
+            }
+         }
+
+         break;
+      }
+   }
+
+   // 단어를 출력
+   // std::cout << "현재 세종시 기온은 " <<temperature << "도입니다." <<
+   // std::endl; std::cout << "현재 세종시 습도은 " <<humidity << "도입니다."
+   // << std::endl;
+   std::cout << precipitation << std::endl;
+   std::string utf8Precipitation = convertEUC_KRtoUTF8(precipitation);
+   std::cout << utf8Precipitation << std::endl;
+   inputFile.close();
+
+   return 0;
 }
