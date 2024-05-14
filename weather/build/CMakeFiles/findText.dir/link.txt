@@ -1,1 +1,1 @@
-/usr/bin/c++ -rdynamic CMakeFiles/findText.dir/findText.cpp.o -o findText  -lcurl 
+/usr/bin/c++  -fexec-charset=EUC-KR -rdynamic CMakeFiles/findText.dir/findText.cpp.o -o findText  -lcurl 

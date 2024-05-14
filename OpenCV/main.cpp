@@ -3,16 +3,19 @@
 #include <sstream>
 #include <string>
 #include <ctime>
+#include <codecvt>
 #include "opencv2/opencv.hpp"
+
 
 using namespace cv;
 using namespace std;
 String folder = "/home/hrd/Desktop/Project_MBH/data/";
 
 
+
 int main() {
     // file data 추출(기온, 습도, 강수량)
-    ifstream inputFile("/home/hrd/Desktop/Project_MBH/weather/build/output.txt"); // 파일 경로를 수정하세요
+    ifstream inputFile("/home/hrd/Desktop/Project_MBH/weather/build/output1.txt"); // 파일 경로를 수정하세요
     string line;
     string temperature;        // 기온
     string humidity;           // 습도
@@ -28,9 +31,14 @@ int main() {
     int currentLine = 0;
     while (getline(inputFile, line)) {
         currentLine++;
+        
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring wideString = converter.from_bytes(line.c_str());
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> utf8Converter;
+        line = utf8Converter.to_bytes(wideString);
 
         // 5번째 줄인 경우
-        if (currentLine == 5) {
+        if (currentLine == 15) {
             istringstream iss(line);
             string word;
             int wordCount = 0;
@@ -38,18 +46,18 @@ int main() {
             // 공백을 구분자로 하여 단어 추출
             while (iss >> word) {
                 wordCount++;
-                // 12번째 단어
-                if (wordCount == 12) {
-                    temperature = word;
-                    continue;
-                }
-                // 14번째 단어
-                if (wordCount == 14) {
-                    humidity = word;
-                    continue;
-                }
+                // // 12번째 단어
+                // if (wordCount == 12) {
+                //     temperature = word;
+                //     continue;
+                // }
+                // // 14번째 단어
+                // if (wordCount == 14) {
+                //     humidity = word;
+                //     continue;
+                // }
                 // 16번째 단어
-                if (wordCount == 16) {
+                if (wordCount == 5) {
                     precipitation = word;
                     break;
                 }
@@ -59,11 +67,12 @@ int main() {
         }
     }
 
+
     // 단어를 출력
     // std::cout << "현재 세종시 기온은 " <<temperature << "도입니다." << std::endl;
     // std::cout << "현재 세종시 습도은 " <<humidity << "도입니다." << std::endl;
-    // std::cout << "현재 세종시 강수량은 " <<precipitation << "mm입니다." << std::endl;
-    
+    std::cout << precipitation  << std::endl;
+
     inputFile.close();
     
     //TIME
@@ -74,7 +83,8 @@ int main() {
     // OpenCV
     Mat src = imread(folder + "background.jpg", IMREAD_COLOR);
     Mat background = src.clone();
-    putText(background, temperature, Point(100,200),FONT_HERSHEY_PLAIN,10,Scalar(255,255,255),15);
+    
+    // putText(background, precipitation, Point(100,200),FONT_HERSHEY_SIMPLEX,1.0,Scalar(255,255,255));
 	
 	imshow("background", background);
 	waitKey();
@@ -82,3 +92,5 @@ int main() {
 	return 0;
 
 }
+
+

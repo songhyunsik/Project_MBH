@@ -142,6 +142,19 @@ weather/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/build
 .PHONY : weather/fast
 
+#=============================================================================
+# Target rules for targets named weatherJson
+
+# Build rule for target.
+weatherJson: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 weatherJson
+.PHONY : weatherJson
+
+# fast build rule for target.
+weatherJson/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/weatherJson.dir/build.make CMakeFiles/weatherJson.dir/build
+.PHONY : weatherJson/fast
+
 findText.o: findText.cpp.o
 .PHONY : findText.o
 
@@ -190,6 +203,30 @@ weather.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/weather.dir/build.make CMakeFiles/weather.dir/weather.cpp.s
 .PHONY : weather.cpp.s
 
+weatherJson.o: weatherJson.cpp.o
+.PHONY : weatherJson.o
+
+# target to build an object file
+weatherJson.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/weatherJson.dir/build.make CMakeFiles/weatherJson.dir/weatherJson.cpp.o
+.PHONY : weatherJson.cpp.o
+
+weatherJson.i: weatherJson.cpp.i
+.PHONY : weatherJson.i
+
+# target to preprocess a source file
+weatherJson.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/weatherJson.dir/build.make CMakeFiles/weatherJson.dir/weatherJson.cpp.i
+.PHONY : weatherJson.cpp.i
+
+weatherJson.s: weatherJson.cpp.s
+.PHONY : weatherJson.s
+
+# target to generate assembly for a file
+weatherJson.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/weatherJson.dir/build.make CMakeFiles/weatherJson.dir/weatherJson.cpp.s
+.PHONY : weatherJson.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -200,12 +237,16 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... findText"
 	@echo "... weather"
+	@echo "... weatherJson"
 	@echo "... findText.o"
 	@echo "... findText.i"
 	@echo "... findText.s"
 	@echo "... weather.o"
 	@echo "... weather.i"
 	@echo "... weather.s"
+	@echo "... weatherJson.o"
+	@echo "... weatherJson.i"
+	@echo "... weatherJson.s"
 .PHONY : help
 
 

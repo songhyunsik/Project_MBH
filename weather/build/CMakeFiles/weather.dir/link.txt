@@ -1,1 +1,1 @@
-/usr/bin/c++ -rdynamic CMakeFiles/weather.dir/weather.cpp.o -o weather  -lcurl 
+/usr/bin/c++  -fexec-charset=EUC-KR -rdynamic CMakeFiles/weather.dir/weather.cpp.o -o weather  -lcurl 
