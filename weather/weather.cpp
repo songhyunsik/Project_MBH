@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 
 using namespace std;
 
@@ -12,31 +13,37 @@ class weather
 private:
     const char* spacedata;
     const char* filename;
-    
+    int year;
+    int mon;
+    int day;
+    int hour;
+    int min;
 public:
     string ta;              // 기온
     string rn;              // 강수량
     string hm;              // 습도
     string ca_tot;          // 전운량
     weather(const char* data, const char* file);
+    weather();
+
     void outputtxt();
     void findtxt();
 };
 
 int main() {
-    // weather seoul("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=108&help=0&authKey=FyIoXmJzSiWiKF5icxolng","seoul.txt");      // 서울: 108
-    // weather busan("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=159&help=0&authKey=FyIoXmJzSiWiKF5icxolng","busan.txt");      // 부산: 159
-    // weather daejeon("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=133&help=0&authKey=FyIoXmJzSiWiKF5icxolng","daejeon.txt");  // 대전: 133
+    weather seoul("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=108&help=0&authKey=FyIoXmJzSiWiKF5icxolng","seoul.txt");      // 서울: 108
+    weather busan("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=159&help=0&authKey=FyIoXmJzSiWiKF5icxolng","busan.txt");      // 부산: 159
+    weather daejeon("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=133&help=0&authKey=FyIoXmJzSiWiKF5icxolng","daejeon.txt");  // 대전: 133
     weather jeju("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=184&help=0&authKey=FyIoXmJzSiWiKF5icxolng","jeju.txt");        // 제주: 184
 
-    // seoul.outputtxt();
-    // busan.outputtxt();
-    // daejeon.outputtxt();
+    seoul.outputtxt();
+    busan.outputtxt();
+    daejeon.outputtxt();
     jeju.outputtxt();
 
-    // seoul.findtxt();
-    // busan.findtxt();
-    // daejeon.findtxt();
+    seoul.findtxt();
+    busan.findtxt();
+    daejeon.findtxt();
     jeju.findtxt();
 
     return 0;
@@ -45,6 +52,19 @@ int main() {
 weather::weather(const char* data, const char* file){
     spacedata = data;
     filename = file;
+}
+
+weather::weather(){
+    // 현재 시간을 가져옴
+    std::time_t now = std::time(nullptr);
+    
+    // 시간 구조체로 변환
+    std::tm* current_time = std::localtime(&now);
+
+    year = current_time->tm_year + 1900;
+    mon = current_time->tm_mon + 1;
+    hour = current_time->tm_hour;
+    min = current_time->tm_min;
 }
 
 void weather::outputtxt()

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <ctime>
 
-int main() {
+int main (void) {
     // 현재 시간을 가져옴
     std::time_t now = std::time(nullptr);
     
@@ -17,5 +17,6 @@ int main() {
               << current_time->tm_min << ':'        // 분
               << current_time->tm_sec << '\n';      // 초
     
+
     return 0;
 }
