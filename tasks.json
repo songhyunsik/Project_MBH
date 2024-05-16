@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-g",
+                "main.cpp",
+                "-o",
+                "TextExtraction",   // 빌드된 실행 파일의 이름으로 수정
+                "`pkg-config",      // pkg-config 명령어를 백틱(`)으로 감싸지 않도록 수정
+                "--cflags",
+                "--libs",
+                "opencv4 tesseract`"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}
