@@ -13,33 +13,53 @@ class weather
 private:
     const char* spacedata;
     const char* filename;
-    int year;
-    int mon;
-    int day;
-    int hour;
-    int min;
+    
 public:
+    string year;
+    string mon;
+    string day;
+    string hour;
+    string min;
     string ta;              // 기온
     string rn;              // 강수량
     string hm;              // 습도
     string ca_tot;          // 전운량
     weather(const char* data, const char* file);
-    weather();
-
+    
+    void nowtime();
     void outputtxt();
     void findtxt();
 };
 
 int main() {
+    int buttonSeoul;
     weather seoul("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=108&help=0&authKey=FyIoXmJzSiWiKF5icxolng","seoul.txt");      // 서울: 108
     weather busan("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=159&help=0&authKey=FyIoXmJzSiWiKF5icxolng","busan.txt");      // 부산: 159
     weather daejeon("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=133&help=0&authKey=FyIoXmJzSiWiKF5icxolng","daejeon.txt");  // 대전: 133
     weather jeju("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=184&help=0&authKey=FyIoXmJzSiWiKF5icxolng","jeju.txt");        // 제주: 184
 
+    if(buttonSeoul == 0){
+        cout << seoul.day << endl;
+        cout << seoul.hour << endl;
+        cout << seoul.min << endl;
+
+        seoul.rn;
+        seoul.ta;
+        seoul.ca_tot;
+        seoul.hm;
+
+
+    }
+
     seoul.outputtxt();
     busan.outputtxt();
     daejeon.outputtxt();
     jeju.outputtxt();
+
+    seoul.nowtime();
+    busan.nowtime();
+    daejeon.nowtime();
+    jeju.nowtime();
 
     seoul.findtxt();
     busan.findtxt();
@@ -54,17 +74,17 @@ weather::weather(const char* data, const char* file){
     filename = file;
 }
 
-weather::weather(){
+void weather::nowtime(){
     // 현재 시간을 가져옴
-    std::time_t now = std::time(nullptr);
+    time_t now = time(nullptr);
     
     // 시간 구조체로 변환
-    std::tm* current_time = std::localtime(&now);
+    tm* current_time = localtime(&now);
 
-    year = current_time->tm_year + 1900;
-    mon = current_time->tm_mon + 1;
-    hour = current_time->tm_hour;
-    min = current_time->tm_min;
+    year = to_string(current_time->tm_year + 1900);
+    mon = to_string(current_time->tm_mon + 1);
+    hour = to_string(current_time->tm_hour);
+    min = to_string(current_time->tm_min);
 }
 
 void weather::outputtxt()
