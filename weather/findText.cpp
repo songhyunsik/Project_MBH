@@ -23,7 +23,7 @@ int main() {
         currentLine++;
 
         // 5번째 줄인 경우
-        if (currentLine == 12) {
+        if (currentLine == 5) {
             std::istringstream iss(line);
             std::string word;
             int wordCount = 0;
@@ -31,18 +31,18 @@ int main() {
             // 공백을 구분자로 하여 단어 추출
             while (iss >> word) {
                 wordCount++;
-                // 12번째 단어
-                // if (wordCount == 12) {
-                //     temperature = word;
-                //     continue;
-                // }
-                // // 14번째 단어
-                // if (wordCount == 14) {
-                //     humidity = word;
-                //     continue;
-                // }
-                // 16번째 단어
-                if (wordCount == 5) {
+                //12번째 단어
+                if (wordCount == 12) {
+                    temperature = word;
+                    continue;
+                }
+                // 14번째 단어
+                if (wordCount == 14) {
+                    humidity = word;
+                    continue;
+                }
+                //16번째 단어
+                if (wordCount == 16) {
                     precipitation = word;
                     break;
                 }
@@ -53,8 +53,8 @@ int main() {
     }
 
     // 단어를 출력
-    // std::cout << "현재 세종시 기온은 " <<temperature << "도입니다." << std::endl;
-    // std::cout << "현재 세종시 습도은 " <<humidity << "도입니다." << std::endl;
+    std::cout << temperature <<  std::endl;
+    std::cout << humidity <<  std::endl;
     std::cout << precipitation <<  std::endl;
     
     inputFile.close();
