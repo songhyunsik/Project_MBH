@@ -7,13 +7,6 @@
 
 using namespace std;
 
-// 관서번호
-// 서울: 108
-// 세종: 29
-// 제주: 184
-// 대전: 133
-// 부산: 159
-
 class weather
 {
 private:
@@ -29,6 +22,25 @@ public:
     void outputtxt();
     void findtxt();
 };
+
+int main() {
+    // weather seoul("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=108&help=0&authKey=FyIoXmJzSiWiKF5icxolng","seoul.txt");      // 서울: 108
+    // weather busan("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=159&help=0&authKey=FyIoXmJzSiWiKF5icxolng","busan.txt");      // 부산: 159
+    // weather daejeon("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=133&help=0&authKey=FyIoXmJzSiWiKF5icxolng","daejeon.txt");  // 대전: 133
+    weather jeju("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=184&help=0&authKey=FyIoXmJzSiWiKF5icxolng","jeju.txt");        // 제주: 184
+
+    // seoul.outputtxt();
+    // busan.outputtxt();
+    // daejeon.outputtxt();
+    jeju.outputtxt();
+
+    // seoul.findtxt();
+    // busan.findtxt();
+    // daejeon.findtxt();
+    jeju.findtxt();
+
+    return 0;
+}
 
 weather::weather(const char* data, const char* file){
     spacedata = data;
@@ -83,6 +95,11 @@ void weather::findtxt(){
                 //16번째 단어
                 if (wordCount == 16) {
                     rn = word;
+                    continue;
+                }
+                //28번째 단어
+                if (wordCount == 26) {
+                    ca_tot = word;
                     break;
                 }
             }
@@ -95,27 +112,7 @@ void weather::findtxt(){
     cout << "기온은: "<< ta <<  endl;
     cout << "습도는: "<<  hm <<  endl;
     cout << "강수량은: "<< rn <<  endl;
+    cout << "적운량은: "<< ca_tot <<  endl;
     
     inputFile.close();
 }
-
-
-int main() {
-    weather seoul("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=108&help=0&authKey=FyIoXmJzSiWiKF5icxolng","seoul.txt");
-    weather busan("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=159&help=0&authKey=FyIoXmJzSiWiKF5icxolng","busan.txt");
-    weather daejeon("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=133&help=0&authKey=FyIoXmJzSiWiKF5icxolng","daejeon.txt");
-    weather jeju("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=184&help=0&authKey=FyIoXmJzSiWiKF5icxolng","jeju.txt");
-
-    seoul.outputtxt();
-    busan.outputtxt();
-    daejeon.outputtxt();
-    jeju.outputtxt();
-
-    seoul.findtxt();
-    busan.findtxt();
-    daejeon.findtxt();
-    jeju.findtxt();
-
-    return 0;
-}
-
