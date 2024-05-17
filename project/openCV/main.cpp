@@ -1,66 +1,68 @@
 #include "opencv2/opencv.hpp"
-#include <tesseract/baseapi.h>
-#include <leptonica/allheaders.h>
 #include <iostream>
 
 using namespace cv;
 using namespace std;
 
-int main() {
-    // 이미지를 불러옵니다.
-    Mat image = imread("/home/matt/바탕화면/Project_MBH/project/data/seoul.jpg");
-    if (image.empty()) {
-        cerr << "이미지를 불러올 수 없습니다." << endl;
+string folderPath = "/home/matt/바탕화면/Project_MBH/project/data/";
+
+int main(){
+
+    Mat img = imread(folderPath + "daejun.png");
+    if (img.empty()) {
+        cerr << "배경 이미지 불러오기 실패!" << endl;
         return -1;
     }
 
-    // 이미지를 그레이스케일로 변환합니다.
-    Mat gray;
-    cvtColor(image, gray, COLOR_BGR2GRAY);
+    putText(img, "DAEJEON ", Point(50, 30), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 5);
+    putText(img, "Today's Weather : ", Point(50, 60), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 3);
+    putText(img, "Today's Temperature : ", Point(50, 90), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 3);
+    putText(img, "Today's Rainfall : ", Point(50, 120), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 3);
+    putText(img, "Today's Total Cloudiness : ", Point(50, 150), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 3);
 
-    // 이미지를 이진화합니다.
-    Mat binary;
-    threshold(gray, binary, 0, 255, THRESH_BINARY_INV | THRESH_OTSU);
+    // 이모지 이미지 불러오기
+    Mat emoji = imread(folderPath + "smile.png", IMREAD_UNCHANGED); // IMREAD_UNCHANGED로 알파 채널 포함
+    if (emoji.empty()) {
+        cerr << "이모지 이미지 불러오기 실패!" << endl;
+        return -1;
+    }
 
-    // 윤곽선을 검출합니다.
-    vector<vector<Point>> contours;
-    findContours(binary, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    // 이모지 이미지 크기 조정
+    double scale = 0.04;
+    Mat resizedEmoji;
+    resize(emoji, resizedEmoji, Size(), scale, scale);
 
-    // 가장 큰 윤곽선을 찾습니다. (텍스트 영역이라고 가정)
-    int largest_contour_index = -1;
-    double largest_area = 0;
-    for (size_t i = 0; i < contours.size(); i++) {
-        double area = contourArea(contours[i]);
-        if (area > largest_area) {
-            largest_area = area;
-            largest_contour_index = i;
+    // 이모지를 놓을 위치 정의
+    int emojiX = 340;
+    int emojiY = 30;
+
+    // 이미지 범위를 벗어나는지 확인
+    if (emojiX + resizedEmoji.cols > img.cols || emojiY + resizedEmoji.rows > img.rows) {
+        cerr << "이모지가 이미지의 범위를 벗어납니다!" << endl;
+        return -1;
+    }
+
+    // ROI 설정
+    Rect roi(Point(emojiX, emojiY), resizedEmoji.size());
+
+    // 알파 채널이 있는 경우 투명도를 유지하면서 복사
+    if (resizedEmoji.channels() == 4) {
+        for (int r = 0; r < resizedEmoji.rows; ++r) {
+            for (int c = 0; c < resizedEmoji.cols; ++c) {
+                Vec4b& rgba = resizedEmoji.at<Vec4b>(r, c);
+                if (rgba[3] > 0) { // 알파 채널이 0이 아닌 경우
+                    img.at<Vec3b>(emojiY + r, emojiX + c)[0] = rgba[0];
+                    img.at<Vec3b>(emojiY + r, emojiX + c)[1] = rgba[1];
+                    img.at<Vec3b>(emojiY + r, emojiX + c)[2] = rgba[2];
+                }
+            }
         }
-    }
-
-    // 가장 큰 윤곽선을 사각형으로 둘러쌉니다.
-    if (largest_contour_index != -1) {
-        Rect bounding_rect = boundingRect(contours[largest_contour_index]);
-        Mat text_region = gray(bounding_rect);
-
-        // Tesseract OCR 객체를 초기화합니다.
-        tesseract::TessBaseAPI ocr;
-        ocr.Init(NULL, "eng", tesseract::OEM_LSTM_ONLY);
-        ocr.SetPageSegMode(tesseract::PSM_SINGLE_BLOCK);
-        
-        // 이미지를 Tesseract OCR에 입력합니다.
-        ocr.SetImage(text_region.data, text_region.cols, text_region.rows, 1, text_region.step);
-        
-        // 텍스트를 추출합니다.
-        string text = string(ocr.GetUTF8Text());
-        cout << "추출된 텍스트: " << text << endl;
-        
-        // 추출된 텍스트 영역을 시각화합니다.
-        rectangle(image, bounding_rect, Scalar(0, 255, 0), 2);
-        imshow("Detected Text Region", image);
-        waitKey(0);
     } else {
-        cerr << "텍스트 영역을 찾을 수 없습니다." << endl;
+        resizedEmoji.copyTo(img(roi));
     }
+
+    imshow("img", img);
+    waitKey(0);
 
     return 0;
 }

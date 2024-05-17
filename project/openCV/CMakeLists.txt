@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.5)
-project(TextExtraction)
-
+cmake_minimum_required(VERSION 3.2)
+project(basicOp)
 find_package(OpenCV REQUIRED)
-find_package(Tesseract REQUIRED)
+file(GLOB SOURCES "*.cpp")
 
-include_directories(${OpenCV_INCLUDE_DIRS} ${Tesseract_INCLUDE_DIRS})
-add_executable(TextExtraction main.cpp)
-
-target_link_libraries(TextExtraction ${OpenCV_LIBS} ${Tesseract_LIBRARIES})
+foreach(SOURCE ${SOURCES})
+    get_filename_component(EXE_NAME ${SOURCE} NAME_WE)
+    add_executable(${EXE_NAME} ${SOURCE})
+    target_link_libraries(${EXE_NAME} ${OpenCV_LIBS})
+    target_include_directories(${EXE_NAME} PUBLIC ${OpenCV_LIB_DIR})
+endforeach()
