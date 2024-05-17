@@ -10,9 +10,7 @@ using namespace cv;
 
 String folder = "/home/hrd/Desktop/Project_MBH/data/";
 string folderPath = "/home/hrd/Desktop/Project_MBH/data/";
-
-void init();
-int serial_num ;
+int serial_num  = 3;
 
 class weather
 {
@@ -149,7 +147,7 @@ void weather::findtxt(){
                     continue;
                 }
                 //16번째 단어
-                if (wordCount == 16) {
+                if (wordCount == 16) {                 
                     rn = word;
                     continue;
                 }
