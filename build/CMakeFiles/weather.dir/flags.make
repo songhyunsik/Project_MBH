@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/g++
 CXX_DEFINES = 
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -I/home/hrd/Desktop/Project_MBH/weather/include -isystem /usr/include/opencv4
 
-CXX_FLAGS =  -fexec-charset=EUC-KR -g
+CXX_FLAGS = -g
 

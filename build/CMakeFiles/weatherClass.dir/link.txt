@@ -1,0 +1,1 @@
+/usr/bin/g++ -g -rdynamic CMakeFiles/weatherClass.dir/weatherClass.cpp.o -o weatherClass  -lcurl 

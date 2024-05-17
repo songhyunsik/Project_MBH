@@ -1,4 +1,0 @@
-/home/hrd/Desktop/Project_MBH/OpenCV/build/CMakeFiles/background.dir
-/home/hrd/Desktop/Project_MBH/OpenCV/build/CMakeFiles/main.dir
-/home/hrd/Desktop/Project_MBH/OpenCV/build/CMakeFiles/edit_cache.dir
-/home/hrd/Desktop/Project_MBH/OpenCV/build/CMakeFiles/rebuild_cache.dir
