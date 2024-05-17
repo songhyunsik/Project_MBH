@@ -1,1 +1,0 @@
-/usr/bin/c++  -fexec-charset=EUC-KR -rdynamic CMakeFiles/weatherJson.dir/weatherJson.cpp.o -o weatherJson  -lcurl 

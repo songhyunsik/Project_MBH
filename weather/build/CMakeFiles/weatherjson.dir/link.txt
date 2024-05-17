@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/weatherjson.dir/weatherjson.cpp.o -o weatherjson  -lcurl 

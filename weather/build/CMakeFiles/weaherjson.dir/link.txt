@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/weaherjson.dir/weaherjson.cpp.o -o weaherjson  -lcurl 
