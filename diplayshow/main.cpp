@@ -27,17 +27,7 @@ public:
     void findtxt();         // 필요 데이터 변수 저장
 };
 
-
-void opencv(string& data) {
-	Mat src = imread(folder + "background.jpg", IMREAD_COLOR);
-    Mat background = src.clone();
-    putText(background, data, Point(700,150),FONT_HERSHEY_PLAIN,8,Scalar(255,255,255),15);
-	
-	imshow("background", background);
-	waitKey();
-	destroyAllWindows();
-}
-
+void opencv(string& data1, string& data2, string& data3, string& data4);
 
 
 int main() {
@@ -57,7 +47,7 @@ int main() {
     min = to_string(current_time->tm_min);
 
 
-    seoul.outputtxt();
+    // seoul.outputtxt();
     // busan.outputtxt();
     // daejeon.outputtxt();
     // jeju.outputtxt();
@@ -73,7 +63,7 @@ int main() {
     cout << "강수량은: "<< seoul.rn <<  endl;
     cout << "적운량은: "<< seoul.ca_tot <<  endl;
 
-    opencv(seoul.ta);
+    opencv(seoul.ta,seoul.hm,seoul.rn,seoul.ca_tot);
 
     return 0;
 }
@@ -150,3 +140,15 @@ void weather::findtxt(){
 }
 
 
+void opencv(string& data1, string& data2, string& data3, string& data4) {
+	Mat src = imread(folder + "background.jpg", IMREAD_COLOR);
+    Mat background = src.clone();
+    putText(background, data1, Point(700,150),FONT_HERSHEY_PLAIN,8,Scalar(255,255,255),10);
+    putText(background, data2, Point(200,150),FONT_HERSHEY_PLAIN,8,Scalar(255,0,255),5);
+    putText(background, data3, Point(300,150),FONT_HERSHEY_PLAIN,8,Scalar(255,255,0),5);
+    putText(background, data4, Point(400,150),FONT_HERSHEY_PLAIN,8,Scalar(0),5);
+	
+	imshow("background", background);
+	waitKey();
+	destroyAllWindows();
+}
