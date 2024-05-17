@@ -8,54 +8,44 @@
 #define PIN 6
 #define SW 2    // 버튼 연결 핀
 #define BRIGHTNESS_PIN A0 // 가변 저항 연결 핀
+
+
+int brightnessValue = 0; // 현재 밝기 값
+int brightnessChanged  = false; // 이전 밝기 값
+
 volatile int cnt = 0; // 인터럽트에 의해 변경되므로 volatile 선언
 
-// Parameter 1 = number of pixels in strip
-// Parameter 2 = Arduino pin number (most are valid)
-// Parameter 3 = pixel type flags, add together as needed:
-//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
-//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
-//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
-//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-//   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, PIN, NEO_GRB + NEO_KHZ800);
 
-// IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
-// pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
-// and minimize distance between Arduino and first pixel.  Avoid connecting
-// on a live circuit...if you must, connect GND first.
-
-#line 26 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 18 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void setup();
-#line 44 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 34 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void loop();
-#line 88 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 90 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void buttonISR();
-#line 93 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 95 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void colorWipe(uint32_t c, uint8_t wait);
-#line 104 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 106 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void rainbow(uint8_t wait);
-#line 120 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 122 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void rainbowCycle(uint8_t wait);
-#line 136 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 138 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void theaterChase(uint32_t c, uint8_t wait);
-#line 157 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 159 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void theaterChaseRainbow(uint8_t wait);
-#line 179 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 181 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 uint32_t Wheel(byte WheelPos);
-#line 26 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 18 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void setup() {
-  // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
   #if defined (__AVR_ATtiny85__)
   if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
   #endif
-  // End of trinket special code
 
   pinMode(SW, INPUT_PULLUP);  // 버튼 핀을 풀업 입력 모드로 설정
 
   strip.begin();
   strip.setBrightness(50);
-  strip.show(); // Initialize all pixels to 'off'
+  strip.show(); // 모든 픽셀이 꺼져있는 상태로 출력
   Serial.begin(115200);
 
   // 인터럽트 설정 (버튼 핀에 FALLING 모드 설정)
@@ -63,12 +53,24 @@ void setup() {
 }
 
 void loop() {
-  int brightnessValue = map(analogRead(BRIGHTNESS_PIN), 0, 1023, 0, 255); // 아날로그 입력 값을 밝기로 변환합니다.
-  strip.setBrightness(brightnessValue); // NeoPixel의 밝기를 설정합니다.
-  Serial.print("cnt: ");
+  brightnessValue = map(analogRead(BRIGHTNESS_PIN), 0, 1023, 0, 255); // 아날로그 입력 값을 밝기로 변환
+  strip.setBrightness(brightnessValue); // NeoPixel의 밝기를 설정
+  Serial.print("Mode: "); 
   Serial.println(cnt);
-  Serial.print("Brightness: ");
-  Serial.println(brightnessValue);
+
+   // 현재 밝기 값이 이전 값과 다르면 작업을 수행
+  if (brightnessChanged ) {
+    // NeoPixel의 밝기를 설정
+    strip.setBrightness(brightnessValue);
+
+    
+
+    // 이전 밝기 값을 업데이트
+    brightnessChanged  = false;
+  }
+ // 변경된 밝기 값 출력
+    Serial.print("Brightness: ");
+    Serial.println(brightnessValue); 
 
   // cnt 값에 따라 LED 패턴 실행
   switch (cnt) {
@@ -96,7 +98,7 @@ void loop() {
       break;
   }
 
-  // cnt 값을 제한
+  // cnt 값을 제한 + 마지막 패턴이 도달하였을 때, 처음 패턴으로 초기화
   if (cnt > 5) {
     cnt = 0;
   }
