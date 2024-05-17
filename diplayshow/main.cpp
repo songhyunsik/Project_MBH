@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <X11/Xlib.h>
 #include "opencv2/opencv.hpp"
 using namespace std;
 using namespace cv;
@@ -170,6 +171,14 @@ void weather::findtxt(){
 
 
 void weather::OpenCV(){
+    Display* display = XOpenDisplay(NULL);
+    if (display == NULL) {
+        std::cerr << "Cannot open display" << std::endl;
+    }
+
+    Screen* screen = DefaultScreenOfDisplay(display);
+    int screen_width = screen->width;
+    int screen_height = screen->height;
 
     Mat img = imread(folderPath + imgfile);      //Scalar(220, 245, 245) : 베이지색
     putText(img, name, Point(50, 30), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 3.0);
@@ -195,8 +204,18 @@ void weather::OpenCV(){
     Rect roi(Point(emojiX, emojiY), resizedEmoji.size());
     resizedEmoji.copyTo(img(roi), resizedEmoji);
 
+    if (img.cols > screen_width || img.rows > screen_height) {
+        double scale_width = static_cast<double>(screen_width) / img.cols;
+        double scale_height = static_cast<double>(screen_height) / img.rows;
+        double scale = std::min(scale_width, scale_height);
+
+        resize(img, img, Size(), scale, scale);
+    }
+
     imshow("img", img);
     waitKey(0);
+
+    XCloseDisplay(display);
 }
 void weather::init(){
     outputtxt();
