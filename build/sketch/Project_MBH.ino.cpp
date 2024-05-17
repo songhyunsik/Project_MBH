@@ -23,15 +23,15 @@ void setup();
 void loop();
 #line 82 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void buttonISR();
-#line 90 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 89 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void Off(uint32_t c, uint8_t wait);
-#line 101 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 100 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void BUSAN_COLOR(uint32_t c, uint8_t wait);
-#line 112 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 111 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void DAEJEON_COLOR(uint32_t c, uint8_t wait);
-#line 123 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 122 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void JEJU_COLOR(uint32_t c, uint8_t wait);
-#line 134 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 133 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void SEOUL_COLOR(uint32_t c, uint8_t wait);
 #line 18 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void setup() {
@@ -99,10 +99,9 @@ void loop() {
 
 // 인터럽트 서비스 루틴 (ISR)
 void buttonISR() {
+  cnt++;
   int data = analogRead(cnt);
   Serial.println(data);
-  delay(1000);
-  cnt++;
 }
 
 // Fill the dots one after the other with a color

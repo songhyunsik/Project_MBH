@@ -83,10 +83,9 @@ void loop() {
 
 // 인터럽트 서비스 루틴 (ISR)
 void buttonISR() {
+  cnt++;
   int data = analogRead(cnt);
   Serial.println(data);
-  delay(1000);
-  cnt++;
 }
 
 // Fill the dots one after the other with a color
