@@ -19,22 +19,20 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, PIN, NEO_GRB + NEO_KHZ800);
 
 #line 18 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void setup();
-#line 34 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 35 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void loop();
-#line 90 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 82 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void buttonISR();
-#line 95 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
-void colorWipe(uint32_t c, uint8_t wait);
-#line 106 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
-void rainbow(uint8_t wait);
-#line 122 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
-void rainbowCycle(uint8_t wait);
-#line 138 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
-void theaterChase(uint32_t c, uint8_t wait);
-#line 159 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
-void theaterChaseRainbow(uint8_t wait);
-#line 181 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
-uint32_t Wheel(byte WheelPos);
+#line 87 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void Off(uint32_t c, uint8_t wait);
+#line 98 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void BUSAN_COLOR(uint32_t c, uint8_t wait);
+#line 109 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void DAEJEON_COLOR(uint32_t c, uint8_t wait);
+#line 120 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void JEJU_COLOR(uint32_t c, uint8_t wait);
+#line 131 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void SEOUL_COLOR(uint32_t c, uint8_t wait);
 #line 18 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void setup() {
   #if defined (__AVR_ATtiny85__)
@@ -45,6 +43,7 @@ void setup() {
 
   strip.begin();
   strip.setBrightness(50);
+  Off(strip.Color(0, 0, 0), 50); // Off
   strip.show(); // 모든 픽셀이 꺼져있는 상태로 출력
   Serial.begin(115200);
 
@@ -63,43 +62,34 @@ void loop() {
     // NeoPixel의 밝기를 설정
     strip.setBrightness(brightnessValue);
 
-    
-
     // 이전 밝기 값을 업데이트
     brightnessChanged  = false;
   }
  // 변경된 밝기 값 출력
-    Serial.print("Brightness: ");
-    Serial.println(brightnessValue); 
+  Serial.print("Brightness: ");
+  Serial.println(brightnessValue); 
 
   // cnt 값에 따라 LED 패턴 실행
   switch (cnt) {
     case 1:
-      colorWipe(strip.Color(255, 0, 0), 50); // Red
-      colorWipe(strip.Color(0, 255, 0), 50); // Green
-      colorWipe(strip.Color(0, 0, 255), 50); // Blue
-      colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
+      BUSAN_COLOR(strip.Color(0, 0, 127), 50); // Blue
       break;
     case 2:
-      theaterChase(strip.Color(127, 127, 127), 50); // White
-      theaterChase(strip.Color(127, 0, 0), 50); // Red
-      theaterChase(strip.Color(0, 0, 127), 50); // Blue
+      DAEJEON_COLOR(strip.Color(255, 0, 255), 50); // Purple
       break;
     case 3:
-      rainbow(8);
+      JEJU_COLOR(strip.Color(255, 255, 0), 50); // Yellow
       break;
     case 4:
-      rainbowCycle(8);
-      break;
-    case 5:
-      theaterChaseRainbow(8);
+      SEOUL_COLOR(strip.Color(0, 0, 127), 50); // Blue
       break;
     default:
+      Off(strip.Color(0, 0, 0), 50); // Off
       break;
   }
 
   // cnt 값을 제한 + 마지막 패턴이 도달하였을 때, 처음 패턴으로 초기화
-  if (cnt > 5) {
+  if (cnt > 4) {
     cnt = 0;
   }
 
@@ -113,101 +103,58 @@ void buttonISR() {
 }
 
 // Fill the dots one after the other with a color
-void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip.numPixels(); i++) {
+void Off(uint32_t c, uint8_t wait) {
+  for(int i=0; i<strip.numPixels(); i++) {
     strip.setPixelColor(i, c);
-    strip.show();
-    delay(wait);
-    if(cnt != 1) {
-      return;
-    }
+  }
+  strip.show();
+  delay(wait);
+  if(cnt != 0) {
+    return;
   }
 }
 
-void rainbow(uint8_t wait) {
-  uint16_t i, j;
-
-  for(j=0; j<256; j++) {
-    for(i=0; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel((i+j) & 255));
-    }
-    strip.show();
-    delay(wait);
-    if(cnt != 3) {
-      return;
-    }
+void BUSAN_COLOR(uint32_t c, uint8_t wait) {
+  for(int i=0; i<strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+  }
+  strip.show();
+  delay(wait);
+  if(cnt != 1) {
+    return;
   }
 }
 
-// Slightly different, this makes the rainbow equally distributed throughout
-void rainbowCycle(uint8_t wait) {
-  uint16_t i, j;
-
-  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
-    for(i=0; i< strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-    }
-    strip.show();
-    delay(wait);
-    if(cnt != 4) {
-      return;
-    }
+void DAEJEON_COLOR(uint32_t c, uint8_t wait) {
+  for(int i=0; i<strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+  }
+  strip.show();
+  delay(wait);
+  if(cnt != 2) {
+    return;
   }
 }
 
-//Theatre-style crawling lights.
-void theaterChase(uint32_t c, uint8_t wait) {
-  for (int j=0; j<10; j++) {  //do 10 cycles of chasing
-    for (int q=0; q < 3; q++) {
-      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, c);    //turn every third pixel on
-      }
-      strip.show();
-
-      delay(wait);
-
-      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, 0);        //turn every third pixel off
-      }
-    }
-    if(cnt != 2) {
-      return;
-    }
+void JEJU_COLOR(uint32_t c, uint8_t wait) {
+  for(int i=0; i<strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+  }
+  strip.show();
+  delay(wait);
+  if(cnt != 3) {
+    return;
   }
 }
 
-//Theatre-style crawling lights with rainbow effect
-void theaterChaseRainbow(uint8_t wait) {
-  for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
-    for (int q=0; q < 3; q++) {
-      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, Wheel( (i+j) % 255));    //turn every third pixel on
-      }
-      strip.show();
-
-      delay(wait);
-
-      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, 0);        //turn every third pixel off
-      }
-    }
-    if(cnt != 5) {
-      return;
-    }
+void SEOUL_COLOR(uint32_t c, uint8_t wait) {
+  for(int i=0; i<strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+  }
+  strip.show();
+  delay(wait);
+  if(cnt != 4) {
+    return;
   }
 }
 
-// Input a value 0 to 255 to get a color value.
-// The colours are a transition r - g - b - back to r.
-uint32_t Wheel(byte WheelPos) {
-  WheelPos = 255 - WheelPos;
-  if(WheelPos < 85) {
-    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-  }
-  if(WheelPos < 170) {
-    WheelPos -= 85;
-    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-  }
-  WheelPos -= 170;
-  return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-}
