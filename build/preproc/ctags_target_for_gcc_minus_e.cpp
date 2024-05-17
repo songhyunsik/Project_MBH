@@ -83,6 +83,9 @@ void loop() {
 
 // 인터럽트 서비스 루틴 (ISR)
 void buttonISR() {
+  int data = analogRead(cnt);
+  Serial.println(data);
+  delay(1000);
   cnt++;
 }
 
