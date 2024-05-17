@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h>
@@ -23,6 +25,25 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, PIN, NEO_GRB + NEO_KHZ800);
 // and minimize distance between Arduino and first pixel.  Avoid connecting
 // on a live circuit...if you must, connect GND first.
 
+#line 26 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void setup();
+#line 44 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void loop();
+#line 88 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void buttonISR();
+#line 93 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void colorWipe(uint32_t c, uint8_t wait);
+#line 104 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void rainbow(uint8_t wait);
+#line 120 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void rainbowCycle(uint8_t wait);
+#line 136 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void theaterChase(uint32_t c, uint8_t wait);
+#line 157 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+void theaterChaseRainbow(uint8_t wait);
+#line 179 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+uint32_t Wheel(byte WheelPos);
+#line 26 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void setup() {
   // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
   #if defined (__AVR_ATtiny85__)
