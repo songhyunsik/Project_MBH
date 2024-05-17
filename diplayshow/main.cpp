@@ -11,6 +11,7 @@ using namespace cv;
 String folder = "/home/hrd/Desktop/Project_MBH/data/";
 string folderPath = "/home/hrd/Desktop/Project_MBH/data/";
 
+void init();
 int serial_num ;
 
 class weather
@@ -18,6 +19,7 @@ class weather
 private:
     const char* spacedata;
     const char* filename;
+    string imgfile;
     
 public:
     string ta;              // 기온
@@ -25,57 +27,80 @@ public:
     string hm;              // 습도
     string ca_tot;          // 전운량
     string name;
-    weather(const char* data, const char* file, string name_value);
+    weather(const char* data, const char* file, string name_value,string fileimg);
+    
     
     void outputtxt();       // API 데이터 입력
     void findtxt();         // 필요 데이터 변수 저장
     void OpenCV();
+    void init();
 };
 
 
-int main() {
-    string year,mon,hour,min;
-    weather seoul("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=108&help=0&authKey=FyIoXmJzSiWiKF5icxolng","seoul.txt","Seoul");      // 서울: 108
-    // weather busan("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=159&help=0&authKey=FyIoXmJzSiWiKF5icxolng","busan.txt");      // 부산: 159
-    weather daejeon("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=133&help=0&authKey=FyIoXmJzSiWiKF5icxolng","daejeon.txt","DAEJEON" );  // 대전: 133
-    // weather jeju("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=184&help=0&authKey=FyIoXmJzSiWiKF5icxolng","jeju.txt");        // 제주: 184
 
-    // 현재시간
+
+int main() {
+    // set class 지역멤버(const char* url, const char* filename, string 지역이름, string 이미지파일이름)
+    weather seoul("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=108&help=0&authKey=FyIoXmJzSiWiKF5icxolng","seoul.txt","SEOUL","seoul.png");          // 서울: 108
+    weather busan("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=159&help=0&authKey=FyIoXmJzSiWiKF5icxolng","busan.txt","BUSAN","busan.png");          // 부산: 159
+    weather daejeon("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=133&help=0&authKey=FyIoXmJzSiWiKF5icxolng","daejeon.txt","DAEJEON","daejun.png" );  // 대전: 133
+    weather jeju("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=184&help=0&authKey=FyIoXmJzSiWiKF5icxolng","jeju.txt","JEJU","jeju.jpg");              // 제주: 184
+
+    // 현재시간 확인
     time_t now = time(nullptr);
     tm* current_time = localtime(&now);
 
     // 시간 정수형 변환
+    // string year,mon,hour,min;
     // year = to_string(current_time->tm_year + 1900);
     // mon = to_string(current_time->tm_mon + 1);
     // hour = to_string(current_time->tm_hour);
     // min = to_string(current_time->tm_min);
 
+    while(1){
+        // set weather value from 기상청 API
+        seoul.init();
+        busan.init();
+        daejeon.init();
+        jeju.init();
 
-    // seoul.outputtxt();
-    // busan.outputtxt();
-    // daejeon.outputtxt();
-    // jeju.outputtxt();
+        // 정각마다 기성청 API 데이터 revalue
+        if(current_time->tm_hour == 0){
+            seoul.init();
+            busan.init();
+            daejeon.init();
+            jeju.init();
+        }
 
-    // seoul.findtxt();
-    // busan.findtxt();
-    daejeon.findtxt();
-    // jeju.findtxt();
+        switch (serial_num)
+        {
+        case 1:
+            seoul.OpenCV();
+            continue;
+        case 2:
+            busan.OpenCV();
+            continue;
+        case 3:
+            daejeon.OpenCV();
+            continue;
+        case 4:
+            jeju.OpenCV();
+            continue;
 
-    // 단어를 출력
-    // cout << "기온은: "<< seoul.ta <<  endl;
-    // cout << "습도는: "<<  seoul.hm <<  endl;
-    // cout << "강수량은: "<< seoul.rn <<  endl;
-    // cout << "적운량은: "<< seoul.ca_tot <<  endl;
+        default :
+            destroyAllWindows();
+        }
 
-    daejeon.OpenCV();
+    }
 
     return 0;
 }
 
-weather::weather(const char* data, const char* file, string name_value){
+weather::weather(const char* data, const char* file, string name_value, string fileimg){
     name = name_value;
     spacedata = data;
     filename = file;
+    imgfile = fileimg;
 }
 
 void weather::outputtxt()
@@ -148,7 +173,7 @@ void weather::findtxt(){
 
 void weather::OpenCV(){
 
-    Mat img = imread(folderPath + "daejun.png");      //Scalar(220, 245, 245) : 베이지색
+    Mat img = imread(folderPath + imgfile);      //Scalar(220, 245, 245) : 베이지색
     putText(img, name, Point(50, 30), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 3.0);
     // putText(img, "Today's Weather : ", Point(50, 60), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 2.5);
     putText(img, "Today's Temperature : " + ta, Point(50, 90), FONT_HERSHEY_SIMPLEX, 1, Scalar(220, 245, 245), 2.5);
@@ -174,4 +199,8 @@ void weather::OpenCV(){
 
     imshow("img", img);
     waitKey(0);
+}
+void weather::init(){
+    outputtxt();
+    findtxt();
 }
