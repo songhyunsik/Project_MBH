@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/hrd/Desktop/Project_MBH/build",
+  "command": "/usr/bin/g++    -fexec-charset=EUC-KR -g -o CMakeFiles/Euc_krToUtf_8.dir/Euc_krToUtf_8.cpp.o -c /home/hrd/Desktop/Project_MBH/weather/Euc_krToUtf_8.cpp",
+  "file": "/home/hrd/Desktop/Project_MBH/weather/Euc_krToUtf_8.cpp"
+},
+{
+  "directory": "/home/hrd/Desktop/Project_MBH/build",
+  "command": "/usr/bin/g++    -fexec-charset=EUC-KR -g -o CMakeFiles/findText.dir/findText.cpp.o -c /home/hrd/Desktop/Project_MBH/weather/findText.cpp",
+  "file": "/home/hrd/Desktop/Project_MBH/weather/findText.cpp"
+},
+{
+  "directory": "/home/hrd/Desktop/Project_MBH/build",
+  "command": "/usr/bin/g++    -fexec-charset=EUC-KR -g -o CMakeFiles/weather.dir/weather.cpp.o -c /home/hrd/Desktop/Project_MBH/weather/weather.cpp",
+  "file": "/home/hrd/Desktop/Project_MBH/weather/weather.cpp"
+}
+]

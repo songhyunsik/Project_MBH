@@ -1,0 +1,1 @@
+/usr/bin/g++  -fexec-charset=EUC-KR -g -rdynamic CMakeFiles/Euc_krToUtf_8.dir/Euc_krToUtf_8.cpp.o -o Euc_krToUtf_8  -lcurl 

@@ -63,5 +63,6 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/hrd/Desktop/Project_MBH/weather"
 }

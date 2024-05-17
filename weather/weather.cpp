@@ -25,8 +25,7 @@ public:
     void findtxt();         // 필요 데이터 변수 저장
 };
 
-void display();
-void led();
+
 
 int main() {
     string year,mon,hour,min;
@@ -44,14 +43,6 @@ int main() {
     hour = to_string(current_time->tm_hour);
     min = to_string(current_time->tm_min);
 
-    
-    while (1)
-    {
-        display();
-
-    }
-    
-    
 
     // seoul.outputtxt();
     // busan.outputtxt();

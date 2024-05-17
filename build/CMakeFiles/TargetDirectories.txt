@@ -1,0 +1,5 @@
+/home/hrd/Desktop/Project_MBH/build/CMakeFiles/Euc_krToUtf_8.dir
+/home/hrd/Desktop/Project_MBH/build/CMakeFiles/findText.dir
+/home/hrd/Desktop/Project_MBH/build/CMakeFiles/weather.dir
+/home/hrd/Desktop/Project_MBH/build/CMakeFiles/edit_cache.dir
+/home/hrd/Desktop/Project_MBH/build/CMakeFiles/rebuild_cache.dir
