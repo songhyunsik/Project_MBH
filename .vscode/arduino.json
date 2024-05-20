@@ -1,6 +1,5 @@
 {
-    "sketch": "Project_MBH.ino",
-    "output": "build",
     "port": "/dev/ttyACM0",
-    "board": "arduino:avr:uno"
+    "board": "arduino:avr:uno",
+    "sketch": "Project_MBH.ino"
 }
