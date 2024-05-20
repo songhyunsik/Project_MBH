@@ -23,15 +23,15 @@ void setup();
 void loop();
 #line 82 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void buttonISR();
-#line 89 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 90 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void Off(uint32_t c, uint8_t wait);
-#line 100 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 101 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void BUSAN_COLOR(uint32_t c, uint8_t wait);
-#line 111 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 112 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void DAEJEON_COLOR(uint32_t c, uint8_t wait);
-#line 122 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 123 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void JEJU_COLOR(uint32_t c, uint8_t wait);
-#line 133 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
+#line 134 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void SEOUL_COLOR(uint32_t c, uint8_t wait);
 #line 18 "/home/songhyunsik/Project_MBH/Project_MBH.ino"
 void setup() {
@@ -101,6 +101,7 @@ void loop() {
 void buttonISR() {
   cnt++;
   int data = analogRead(cnt);
+  Serial.print("Data : ");
   Serial.println(data);
 }
 

@@ -85,6 +85,7 @@ void loop() {
 void buttonISR() {
   cnt++;
   int data = analogRead(cnt);
+  Serial.print("Data : ");
   Serial.println(data);
 }
 
