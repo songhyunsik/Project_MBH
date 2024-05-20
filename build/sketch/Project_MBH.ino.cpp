@@ -5,7 +5,7 @@
 #include <avr/power.h>
 #endif
 
-#define PIN 6
+#define PIN 6 
 #define SW 2    // 버튼 연결 핀
 #define BRIGHTNESS_PIN A0 // 가변 저항 연결 핀
 

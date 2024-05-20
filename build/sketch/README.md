@@ -16,3 +16,9 @@ Second Project GitHub
 
 - Vscode에서 아두이노 확장팩을 설치하면 아두이노 코드를 보드에 업로드 할 수 있다.
 - 아두이노에서 네오픽셀의 색상을 벼녁ㅇ을 담당한는 변수인 cnt를 SSH 통신 방식을 이용하여 라즈베리파이에 데이터를 넘겨주도록 추가하였다.
+
+- curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+- arduino-cli version
+- arduino-cli config init
+- arduino-cli core install arduino:avr
+
