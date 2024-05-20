@@ -117,41 +117,78 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named main
+# Target rules for targets named encoding
 
 # Build rule for target.
-main: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main
-.PHONY : main
+encoding: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 encoding
+.PHONY : encoding
 
 # fast build rule for target.
-main/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
-.PHONY : main/fast
+encoding/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/encoding.dir/build.make CMakeFiles/encoding.dir/build
+.PHONY : encoding/fast
 
-main.o: main.cpp.o
-.PHONY : main.o
+#=============================================================================
+# Target rules for targets named text
+
+# Build rule for target.
+text: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 text
+.PHONY : text
+
+# fast build rule for target.
+text/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/text.dir/build.make CMakeFiles/text.dir/build
+.PHONY : text/fast
+
+encoding.o: encoding.cpp.o
+.PHONY : encoding.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.o
-.PHONY : main.cpp.o
+encoding.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/encoding.dir/build.make CMakeFiles/encoding.dir/encoding.cpp.o
+.PHONY : encoding.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+encoding.i: encoding.cpp.i
+.PHONY : encoding.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.i
-.PHONY : main.cpp.i
+encoding.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/encoding.dir/build.make CMakeFiles/encoding.dir/encoding.cpp.i
+.PHONY : encoding.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+encoding.s: encoding.cpp.s
+.PHONY : encoding.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
-.PHONY : main.cpp.s
+encoding.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/encoding.dir/build.make CMakeFiles/encoding.dir/encoding.cpp.s
+.PHONY : encoding.cpp.s
+
+text.o: text.cpp.o
+.PHONY : text.o
+
+# target to build an object file
+text.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/text.dir/build.make CMakeFiles/text.dir/text.cpp.o
+.PHONY : text.cpp.o
+
+text.i: text.cpp.i
+.PHONY : text.i
+
+# target to preprocess a source file
+text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/text.dir/build.make CMakeFiles/text.dir/text.cpp.i
+.PHONY : text.cpp.i
+
+text.s: text.cpp.s
+.PHONY : text.s
+
+# target to generate assembly for a file
+text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/text.dir/build.make CMakeFiles/text.dir/text.cpp.s
+.PHONY : text.cpp.s
 
 # Help Target
 help:
@@ -161,10 +198,14 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... main"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... encoding"
+	@echo "... text"
+	@echo "... encoding.o"
+	@echo "... encoding.i"
+	@echo "... encoding.s"
+	@echo "... text.o"
+	@echo "... text.i"
+	@echo "... text.s"
 .PHONY : help
 
 
