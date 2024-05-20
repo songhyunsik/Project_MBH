@@ -5,12 +5,23 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <iostream>
 #include "opencv2/opencv.hpp"
 
 using namespace std;
 using namespace cv;
 
-string folderPath = "/home/pi/Desktop/Project_MBH/data/";
+int cnt = 0;
+int button = 0;
+
+void onMouse(int event, int x, int y, int flags, void* userdata) {
+    if (event == EVENT_RBUTTONDOWN) {
+        cnt++;
+        button = cnt %4;
+    }
+}
+
+string folderPath = "/home/pi/hrd/Desktop/Project_MBH/data/";
 
 class weather
 {
@@ -20,6 +31,7 @@ private:
     string imgfile;
     
 public:
+    Mat img;
     string ta;              // 기온
     string rn;              // 강수량
     string hm;              // 습도
@@ -29,26 +41,27 @@ public:
     
     void outputtxt();       // API 데이터 입력
     void findtxt();         // 필요 데이터 변수 저장
-    void OpenCV(string H,string M);
+    void OpenCV(string H,string M,string window);
     void init();
 
 };
 
-
-
-
-
 int main() {
+    
     // set 지역 (const char* url, const char* filename, string 지역이름, string 이미지파일이름)
     // 서울: 108, 부산: 159, 대전: 133, 제주: 184
     weather seoul("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=108&help=0&authKey=FyIoXmJzSiWiKF5icxolng","seoul.txt","SEOUL","seoul.jpg");
     weather busan("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=159&help=0&authKey=FyIoXmJzSiWiKF5icxolng","busan.txt","BUSAN","busan.jpg");
     weather daejeon("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=133&help=0&authKey=FyIoXmJzSiWiKF5icxolng","daejeon.txt","DAEJEON","daejun.png" );
     weather jeju("https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php?tm=0&stn=184&help=0&authKey=FyIoXmJzSiWiKF5icxolng","jeju.txt","JEJU","jeju.jpg");
-
-    // 지역확인 변수
-    int button = 0;
+    
     string hour,min;
+    // set window _ mouse
+    string windowName = "original image";
+    namedWindow(windowName,WINDOW_NORMAL);
+    setMouseCallback(windowName,onMouse);
+    setWindowProperty(windowName,WND_PROP_FULLSCREEN,WINDOW_FULLSCREEN);
+    resizeWindow(windowName,1280,800);	// rasberry pi 4 display size = (1280,800)
 
     // init : set weather value from 기상청 API
     seoul.init();
@@ -57,66 +70,62 @@ int main() {
     jeju.init();
 
 	while(1){
-//		button = ???;
+        cout << button << endl;
 		switch(button){
-		case 0:
-			while(1){
-				time_t now = time(nullptr);
-				tm* current_time = localtime(&now);
-				min = to_string(current_time->tm_min);
-				hour = to_string(current_time->tm_hour);
-				if(current_time->tm_min == 0){
-					seoul.init();
-				}
-				seoul.OpenCV(hour,min);
-				waitKey(1000);
-				continue;
-			}
-		case 1:
-			while(1){
-				time_t now = time(nullptr);
-				tm* current_time = localtime(&now);
-				min = to_string(current_time->tm_min);		
-				hour = to_string(current_time->tm_hour);
-				if(current_time->tm_min == 0){
-					busan.init();
-				}
-				busan.OpenCV(hour,min);
-				waitKey(1000);
-				continue;
-			}
-		case 2:
-			while(1){
-				time_t now = time(nullptr);
-				tm* current_time = localtime(&now);
-				min = to_string(current_time->tm_min);		
-				hour = to_string(current_time->tm_hour);
-				if(current_time->tm_min == 0){
-					daejeon.init();
-				}
-				daejeon.OpenCV(hour,min);
-				waitKey(1000);
-				continue;
-			}
-		case 3:
-			while(1){
-				time_t now = time(nullptr);
-				tm* current_time = localtime(&now);
-				min = to_string(current_time->tm_min);		
-				hour = to_string(current_time->tm_hour);
-				if(current_time->tm_min == 0){
-					jeju.init();
-				}
-				jeju.OpenCV(hour,min);
-				waitKey(1000);
-				continue;
-			}
-		
+		case 0:{
+                time_t now = time(nullptr);
+                tm* current_time = localtime(&now);
+                min = to_string(current_time->tm_min);
+                hour = to_string(current_time->tm_hour);
+                if(current_time->tm_min == 0){
+                    seoul.init();
+                }
+                seoul.OpenCV(hour,min,windowName);
+                waitKey(1000);
+                break;
+            }
+		case 1:{
+            time_t now = time(nullptr);
+            tm* current_time = localtime(&now);
+            min = to_string(current_time->tm_min);		
+            hour = to_string(current_time->tm_hour);
+            if(current_time->tm_min == 0){
+                busan.init();
+            }
+            busan.OpenCV(hour,min,windowName);
+            waitKey(1000);
+            break;
+        }
+		case 2:{
+            time_t now = time(nullptr);
+            tm* current_time = localtime(&now);
+            min = to_string(current_time->tm_min);		
+            hour = to_string(current_time->tm_hour);
+            if(current_time->tm_min == 0){
+                daejeon.init();
+            }
+            daejeon.OpenCV(hour,min,windowName);
+            waitKey(1000);
+            break;
+        }        
+
+		case 3:{
+            time_t now = time(nullptr);
+            tm* current_time = localtime(&now);
+            min = to_string(current_time->tm_min);		
+            hour = to_string(current_time->tm_hour);
+            if(current_time->tm_min == 0){
+                jeju.init();
+            }
+            jeju.OpenCV(hour,min,windowName);
+            waitKey(1000);
+            break;
 		}
 	}
-
+    }
     return 0;
 }
+
 
 weather::weather(const char* data, const char* file, string name_value, string fileimg){
     name = name_value;
@@ -198,7 +207,7 @@ void weather::findtxt(){
 
 
 
-void weather::OpenCV(string H,string M){
+void weather::OpenCV(string H,string M,string window){
 
     Mat img = imread(folderPath + imgfile);      //Scalar(220, 245, 245) : 베이지색
     // 날씨 데이터 화면 표기
@@ -209,15 +218,9 @@ void weather::OpenCV(string H,string M){
     // 시간 데이터 화면 표기
     putText(img, H+" : "+M, Point(400, 30), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(220, 245, 245), 2.8);
        
-
-    // window fullscreen resize
-    string windowName = "original image";
-    namedWindow(windowName,WINDOW_NORMAL);
-    setWindowProperty(windowName,WND_PROP_FULLSCREEN,WINDOW_FULLSCREEN);
-    resizeWindow(windowName,1280,800);	// rasberry pi 4 display size = (1280,800)
     
     // print display
-    imshow(windowName, img);
+    imshow(window, img);
 }
 
 
