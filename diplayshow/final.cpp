@@ -21,7 +21,7 @@ void onMouse(int event, int x, int y, int flags, void* userdata) {
     }
 }
 
-string folderPath = "/home/pi/hrd/Desktop/Project_MBH/data/";
+string folderPath = "/home/pi/Desktop/Project_MBH/data/";
 
 class weather
 {
